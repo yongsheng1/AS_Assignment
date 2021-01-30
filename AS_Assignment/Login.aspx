@@ -161,7 +161,7 @@
               <div class="form__group">
                         <asp:Label ID="Label6" runat="server" Text="Password" CssClass="form__input"></asp:Label>
                    
-                        <asp:TextBox ID="tb_pass" runat="server"  CssClass="form__input"></asp:TextBox>
+                        <asp:TextBox ID="tb_pass" runat="server"  CssClass="form__input" TextMode="Password"></asp:TextBox>
                   </div>
         <br />
 
@@ -171,6 +171,10 @@
                     </div>
             <br />
             <br />
+        <div class="form__group">
+                        <asp:Button ID="Button2" runat="server" OnClick="btn_register" Text="Register"  CssClass="btn" />
+                    </div>
+        <br />
             <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
             <asp:Label ID="lblMessage" runat="server" EnableViewState="false">Error Message here (lblMessage)</asp:Label>
         

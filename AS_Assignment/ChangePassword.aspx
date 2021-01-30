@@ -160,20 +160,20 @@
          <div class="form__group">
                         <asp:Label ID="Label2" runat="server" Text="Old Password" CssClass="form__input"></asp:Label>
                     
-                        <asp:TextBox ID="tb_oldpass" runat="server" CssClass="form__input"></asp:TextBox>
+                        <asp:TextBox ID="tb_oldpass" runat="server" CssClass="form__input" TextMode="Password"></asp:TextBox>
                 </div>
                
                 <div class="form__group">
                         <asp:Label ID="Label6" runat="server" Text="Password" CssClass="form__input"></asp:Label>
                     
-                        <asp:TextBox ID="tb_newpass" runat="server"  CssClass="form__input"></asp:TextBox>
+                        <asp:TextBox ID="tb_newpass" runat="server"  CssClass="form__input" TextMode="Password"></asp:TextBox>
                    
                 </div>
 
                  <div class="form__group">
                         <asp:Label ID="Label3" runat="server" Text="Confirm Password" CssClass="form__input"></asp:Label>
                     
-                        <asp:TextBox ID="tb_confirmpass" runat="server" CssClass="form__input"></asp:TextBox>
+                        <asp:TextBox ID="tb_confirmpass" runat="server" CssClass="form__input" TextMode="Password"></asp:TextBox>
                     </div>
 
                  <div class="form__group">

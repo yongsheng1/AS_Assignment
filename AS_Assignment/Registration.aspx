@@ -227,7 +227,7 @@
             <div class="form__group">
             <asp:Label ID="Label3" runat="server" Text="Password" CssClass="form__input"></asp:Label>
                    
-                        <asp:TextBox ID="tb_pwd" runat="server"  onkeyup="javascript:Validate()" CssClass="form__input"></asp:TextBox>
+                        <asp:TextBox ID="tb_pwd" runat="server"  onkeyup="javascript:Validate()" CssClass="form__input" TextMode="Password"></asp:TextBox>
                         <asp:Label ID="lbl_state" runat="server"></asp:Label>
                         <asp:Label ID="lbl_pwdchecker" runat="server" Text=""></asp:Label>
                  </div>   
@@ -235,7 +235,7 @@
             <div class="form__group">
                         <asp:Label ID="Label4" runat="server" Text="Confirm Password" CssClass="form__input"></asp:Label>
                     
-                        <asp:TextBox ID="tb_cfpwd" runat="server"  CssClass="form__input"></asp:TextBox>
+                        <asp:TextBox ID="tb_cfpwd" runat="server"  CssClass="form__input" TextMode="Password"></asp:TextBox>
                     </div>
 
                 <div class="form__group">
@@ -248,6 +248,11 @@
         <br />
                 <div class="form__group">
                         <asp:Button ID="Button1" runat="server" OnClick="btn_Submit_Click" Text="Submit"  CssClass="btn" />
+           </div>
+        <br />
+        <br />
+         <div class="form__group">
+                        <asp:Button ID="Button2" runat="server" OnClick="btn_login" Text="Login"  CssClass="btn" />
            </div>
             <asp:Label ID="lbl_error" runat="server" Text=""></asp:Label>
             <br />

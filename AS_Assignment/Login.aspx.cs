@@ -43,6 +43,7 @@ namespace AS_Assignment
                 int attempt = Convert.ToInt32(getAttempt(username));
                 string timenow = getTime(username).ToString();
                 DateTime maxtime = getMaxTime(username);
+                System.Diagnostics.Debug.WriteLine(dbHash);
                 try
                 {
                     if (dbSalt != null && dbSalt.Length > 0 && dbHash != null && dbHash.Length > 0)
@@ -458,6 +459,11 @@ namespace AS_Assignment
             }
             finally { connection.Close(); }
             return h;
+        }
+
+        protected void btn_register(object sender, EventArgs e)
+        {
+            Response.Redirect("Registration.aspx");
         }
     }
 }

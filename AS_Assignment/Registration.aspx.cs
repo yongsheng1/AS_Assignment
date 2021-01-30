@@ -271,6 +271,11 @@ namespace AS_Assignment
             finally { }
             return cipherText;
         }
+
+        protected void btn_login(object sender, EventArgs e)
+        {
+            Response.Redirect("Login.aspx");
+        }
     }
 
 }
