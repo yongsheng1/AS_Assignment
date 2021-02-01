@@ -31,64 +31,156 @@ namespace AS_Assignment
 
         protected void btn_Submit_Click(object sender, EventArgs e)
         {
-            if (tb_userid.Text != null)
+            if (validateCaptcha())
             {
-
-
-                string pwd = tb_pass.Text.ToString().Trim();
-                string username = tb_userid.Text.ToString().Trim();
-                SHA512Managed hashing = new SHA512Managed();
-                string dbHash = getDBHash(username);
-                string dbSalt = getDBSalt(username);
-                int attempt = Convert.ToInt32(getAttempt(username));
-                string timenow = getTime(username).ToString();
-                DateTime maxtime = getMaxTime(username);
-                System.Diagnostics.Debug.WriteLine(dbHash);
-                try
+                if (tb_userid.Text != null)
                 {
-                    if (dbSalt != null && dbSalt.Length > 0 && dbHash != null && dbHash.Length > 0)
+
+
+                    string pwd = tb_pass.Text.ToString().Trim();
+                    string username = tb_userid.Text.ToString().Trim();
+                    SHA512Managed hashing = new SHA512Managed();
+                    string dbHash = getDBHash(username);
+                    string dbSalt = getDBSalt(username);
+                    int attempt = Convert.ToInt32(getAttempt(username));
+                    string timenow = getTime(username).ToString();
+                    DateTime maxtime = getMaxTime(username);
+                    System.Diagnostics.Debug.WriteLine(dbHash);
+                    try
                     {
-                        if (timenow == "a")
+                        if (dbSalt != null && dbSalt.Length > 0 && dbHash != null && dbHash.Length > 0)
                         {
-                            if (attempt < 3)
+                            if (timenow == "a")
                             {
-                                string pwdWithSalt = pwd + dbSalt;
-                                byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
-                                string userHash = Convert.ToBase64String(hashWithSalt);
-                                if (userHash.Equals(dbHash))
+                                if (attempt < 3)
                                 {
-                                    if (DateTime.Compare(DateTime.Now, maxtime) < 0)
+                                    string pwdWithSalt = pwd + dbSalt;
+                                    byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
+                                    string userHash = Convert.ToBase64String(hashWithSalt);
+                                    if (userHash.Equals(dbHash))
                                     {
-                                        string reset = "a";
-                                        int time = UpdateTime(username, reset);
-                                        System.Diagnostics.Debug.WriteLine("login");
+                                        if (DateTime.Compare(DateTime.Now, maxtime) < 0)
+                                        {
+                                            string reset = "a";
+                                            int time = UpdateTime(username, reset);
+                                            System.Diagnostics.Debug.WriteLine("login");
 
-                                        Session["LoggedIn"] = tb_userid.Text.Trim();
-                                        string guid = Guid.NewGuid().ToString();
-                                        Session["AuthToken"] = guid;
-                                        Response.Cookies.Add(new HttpCookie("AuthToken", guid));
-                                        Response.Redirect("HomePage.aspx", false);
+                                            Session["LoggedIn"] = tb_userid.Text.Trim();
+                                            string guid = Guid.NewGuid().ToString();
+                                            Session["AuthToken"] = guid;
+                                            Response.Cookies.Add(new HttpCookie("AuthToken", guid));
+                                            Response.Redirect("HomePage.aspx", false);
+                                        }
+                                        else
+                                        {
+
+
+                                            Session["LoggedIn"] = tb_userid.Text.Trim();
+                                            string guid = Guid.NewGuid().ToString();
+                                            Session["AuthToken"] = guid;
+                                            Response.Cookies.Add(new HttpCookie("AuthToken", guid));
+                                            Response.Redirect("ChangePassword.aspx", false);
+                                        }
                                     }
                                     else
                                     {
-
-
-                                        Session["LoggedIn"] = tb_userid.Text.Trim();
-                                        string guid = Guid.NewGuid().ToString();
-                                        Session["AuthToken"] = guid;
-                                        Response.Cookies.Add(new HttpCookie("AuthToken", guid));
-                                        Response.Redirect("ChangePassword.aspx", false);
+                                        attempt += 1;
+                                        int update;
+                                        update = UpdateAttempt(username, attempt);
+                                        if (update == 1)
+                                        {
+                                            LblMsg.Visible = true;
+                                            LblMsg.Text = "Userid or password is not valid. Please try again.";
+                                        }
+                                        else
+                                        {
+                                            System.Diagnostics.Debug.WriteLine("Unable to update Attempts");
+                                        }
                                     }
                                 }
                                 else
                                 {
-                                    attempt += 1;
+                                    LblMsg.Text = "Account has been locked out. Try again in 10 minutes.";
+
+                                    attempt = 0;
                                     int update;
+                                    int time;
                                     update = UpdateAttempt(username, attempt);
                                     if (update == 1)
                                     {
-                                        LblMsg.Visible = true;
-                                        LblMsg.Text = "Userid or password is not valid. Please try again.";
+                                        string date = DateTime.Now.AddMinutes(10).ToString();
+                                        time = UpdateTime(username, date);
+
+                                        System.Diagnostics.Debug.WriteLine("Attempts updated", "time: ", date);
+                                    }
+                                    else
+                                    {
+                                        System.Diagnostics.Debug.WriteLine("Unable to update Attempts");
+                                    }
+                                }
+                            }
+                            else if (DateTime.Compare(DateTime.Now, Convert.ToDateTime(timenow)) > 0)
+                            {
+
+                                if (attempt < 3)
+                                {
+                                    string pwdWithSalt = pwd + dbSalt;
+                                    byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
+                                    string userHash = Convert.ToBase64String(hashWithSalt);
+                                    if (userHash.Equals(dbHash))
+                                    {
+                                        if (DateTime.Compare(DateTime.Now, maxtime) < 0)
+                                        {
+                                            string reset = "";
+                                            int time = UpdateTime(username, reset);
+                                            System.Diagnostics.Debug.WriteLine("login");
+
+                                            Session["LoggedIn"] = tb_userid.Text.Trim();
+                                            string guid = Guid.NewGuid().ToString();
+                                            Session["AuthToken"] = guid;
+                                            Response.Cookies.Add(new HttpCookie("AuthToken", guid));
+                                            Response.Redirect("HomePage.aspx", false);
+                                        }
+                                        else
+                                        {
+                                            Session["LoggedIn"] = tb_userid.Text.Trim();
+                                            string guid = Guid.NewGuid().ToString();
+                                            Session["AuthToken"] = guid;
+                                            Response.Cookies.Add(new HttpCookie("AuthToken", guid));
+                                            Response.Redirect("ChangePassword.aspx", false);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        attempt += 1;
+                                        int update;
+                                        update = UpdateAttempt(username, attempt);
+                                        if (update == 1)
+                                        {
+                                            LblMsg.Visible = true;
+                                            LblMsg.Text = "Userid or password is not valid. Please try again.";
+                                        }
+                                        else
+                                        {
+                                            System.Diagnostics.Debug.WriteLine("Unable to update Attempts");
+                                        }
+                                    }
+                                }
+
+                                else
+                                {
+                                    LblMsg.Text = "Account has been locked out. Try again in 10 minutes.";
+
+                                    attempt = 0;
+                                    int update;
+                                    int time;
+                                    update = UpdateAttempt(username, attempt);
+                                    if (update == 1)
+                                    {
+                                        string date = DateTime.Now.AddMinutes(10).ToString();
+                                        time = UpdateTime(username, date);
+
+                                        System.Diagnostics.Debug.WriteLine("Attempts updated", "time: ", date);
                                     }
                                     else
                                     {
@@ -98,128 +190,38 @@ namespace AS_Assignment
                             }
                             else
                             {
-                                LblMsg.Text = "Account has been locked out. Try again in 10 minutes.";
-
-                                attempt = 0;
-                                int update;
-                                int time;
-                                update = UpdateAttempt(username, attempt);
-                                if (update == 1)
-                                {
-                                    string date = DateTime.Now.AddMinutes(10).ToString();
-                                    time = UpdateTime(username, date);
-
-                                    System.Diagnostics.Debug.WriteLine("Attempts updated", "time: ", date);
-                                }
-                                else
-                                {
-                                    System.Diagnostics.Debug.WriteLine("Unable to update Attempts");
-                                }
+                                LblMsg.Text = "Please wait for your account to be unlocked";
                             }
                         }
-                        else if (DateTime.Compare(DateTime.Now, Convert.ToDateTime(timenow)) > 0)
-                        {
 
-                            if (attempt < 3)
-                            {
-                                string pwdWithSalt = pwd + dbSalt;
-                                byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
-                                string userHash = Convert.ToBase64String(hashWithSalt);
-                                if (userHash.Equals(dbHash))
-                                {
-                                    if (DateTime.Compare(DateTime.Now, maxtime) < 0)
-                                    {
-                                        string reset = "";
-                                        int time = UpdateTime(username, reset);
-                                        System.Diagnostics.Debug.WriteLine("login");
 
-                                        Session["LoggedIn"] = tb_userid.Text.Trim();
-                                        string guid = Guid.NewGuid().ToString();
-                                        Session["AuthToken"] = guid;
-                                        Response.Cookies.Add(new HttpCookie("AuthToken", guid));
-                                        Response.Redirect("HomePage.aspx", false);
-                                    }
-                                    else
-                                    {
-                                        Session["LoggedIn"] = tb_userid.Text.Trim();
-                                        string guid = Guid.NewGuid().ToString();
-                                        Session["AuthToken"] = guid;
-                                        Response.Cookies.Add(new HttpCookie("AuthToken", guid));
-                                        Response.Redirect("ChangePassword.aspx", false);
-                                    }
-                                }
-                                else
-                                {
-                                    attempt += 1;
-                                    int update;
-                                    update = UpdateAttempt(username, attempt);
-                                    if (update == 1)
-                                    {
-                                        LblMsg.Visible = true;
-                                        LblMsg.Text = "Userid or password is not valid. Please try again.";
-                                    }
-                                    else
-                                    {
-                                        System.Diagnostics.Debug.WriteLine("Unable to update Attempts");
-                                    }
-                                }
-                            }
-
-                            else
-                            {
-                                LblMsg.Text = "Account has been locked out. Try again in 10 minutes.";
-
-                                attempt = 0;
-                                int update;
-                                int time;
-                                update = UpdateAttempt(username, attempt);
-                                if (update == 1)
-                                {
-                                    string date = DateTime.Now.AddMinutes(10).ToString();
-                                    time = UpdateTime(username, date);
-
-                                    System.Diagnostics.Debug.WriteLine("Attempts updated", "time: ", date);
-                                }
-                                else
-                                {
-                                    System.Diagnostics.Debug.WriteLine("Unable to update Attempts");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            LblMsg.Text = "Please wait for your account to be unlocked";
-                        }
                     }
-
-
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.ToString());
+                    }
+                    finally { }
                 }
-                catch (Exception ex)
+                else
                 {
-                    throw new Exception(ex.ToString());
+
                 }
-                finally { }
+                //if (tb_userid.Text.Trim().Equals("u") && tb_pass.Text.Trim().Equals("p"))
+                //{
+                //    Session["LoggedIn"] = tb_userid.Text.Trim();
+                //    string guid = Guid.NewGuid().ToString();
+                //    Session["AuthToken"] = guid;
+                //    Response.Cookies.Add(new HttpCookie("AuthToken", guid));
+                //    Response.Redirect("HomePage.aspx", false);
+
+                //}
+                //else
+                //{
+                //    lbl_Message.Text = "Wrong username or password";
+
+                //}
             }
-            else
-            {
-
-            }
-            //if (tb_userid.Text.Trim().Equals("u") && tb_pass.Text.Trim().Equals("p"))
-            //{
-            //    Session["LoggedIn"] = tb_userid.Text.Trim();
-            //    string guid = Guid.NewGuid().ToString();
-            //    Session["AuthToken"] = guid;
-            //    Response.Cookies.Add(new HttpCookie("AuthToken", guid));
-            //    Response.Redirect("HomePage.aspx", false);
-
-            //}
-            //else
-            //{
-            //    lbl_Message.Text = "Wrong username or password";
-
-            //}
         }
-
 
         public bool validateCaptcha()
         {
