@@ -213,6 +213,13 @@ namespace AS_Assignment
                     lbl_error.ForeColor = Color.Red;
                 }
             }
+            else
+            {
+                lbl_error.Text = "Passwords are not the same";
+                lbl_error.Visible = true;
+                lbl_error.ForeColor = Color.Red;
+
+            }
         }
 
         protected void createAccount()
