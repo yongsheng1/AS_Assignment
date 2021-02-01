@@ -175,13 +175,16 @@
                     
                         <asp:TextBox ID="tb_confirmpass" runat="server" CssClass="form__input" TextMode="Password"></asp:TextBox>
                     </div>
-
+        <br />
                  <div class="form__group">
                     
                         <asp:Button ID="Button1" runat="server" OnClick="Submit"  Text="Change Password" CssClass="btn" />
                     </div>
-
-
+        <br />
+         <div class="form__group">
+                    
+                        <asp:Button ID="Button2" runat="server" OnClick="Back"  Text="Back to home" CssClass="btn" />
+                    </div>
                 
             <asp:Label ID="lb_error" runat="server" Text=""></asp:Label>
             <asp:Label ID="lbl_pwdchecker" runat="server" Text=""></asp:Label>

@@ -148,67 +148,70 @@ namespace AS_Assignment
         }
         protected void btn_Submit_Click(object sender, EventArgs e)
         {
-            int check = checkInput();
-            if (check == 5)
+            if (tb_pwd.Text == tb_cfpwd.Text)
             {
-                lbl_state.Text = "";
-                int scores = checkPassword(tb_pwd.Text);
-                string status = "";
-                switch (scores)
+                int check = checkInput();
+                if (check == 5)
                 {
-                    case 1:
-                        status = "Very Weak";
-                        break;
-                    case 2:
-                        status = "Weak";
-                        break;
-                    case 3:
-                        status = "Medium";
-                        break;
-                    case 4:
-                        status = "Strong";
-                        break;
-                    case 5:
-                        status = "Excellent";
-                        break;
-                    default:
-                        break;
+                    lbl_state.Text = "";
+                    int scores = checkPassword(tb_pwd.Text);
+                    string status = "";
+                    switch (scores)
+                    {
+                        case 1:
+                            status = "Very Weak";
+                            break;
+                        case 2:
+                            status = "Weak";
+                            break;
+                        case 3:
+                            status = "Medium";
+                            break;
+                        case 4:
+                            status = "Strong";
+                            break;
+                        case 5:
+                            status = "Excellent";
+                            break;
+                        default:
+                            break;
+                    }
+                    lbl_state.Text = "Status : " + status;
+                    if (scores < 4)
+                    {
+                        lbl_state.ForeColor = Color.Red;
+                        return;
+                    }
+                    lbl_state.ForeColor = Color.Green;
+
+
+
+                    string pwd = tb_pwd.Text.ToString().Trim(); ;
+                    //Generate random "salt"
+                    RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+                    byte[] saltByte = new byte[8];
+                    //Fills array of bytes with a cryptographically strong sequence of random values.
+                    rng.GetBytes(saltByte);
+                    salt = Convert.ToBase64String(saltByte);
+                    SHA512Managed hashing = new SHA512Managed();
+                    string pwdWithSalt = pwd + salt;
+                    byte[] plainHash = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwd));
+                    byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
+                    finalHash = Convert.ToBase64String(hashWithSalt);
+                    RijndaelManaged cipher = new RijndaelManaged();
+                    cipher.GenerateKey();
+                    Key = cipher.Key;
+                    IV = cipher.IV;
+                    minpass = DateTime.Now.AddMinutes(5);
+                    maxpass = DateTime.Now.AddMinutes(15);
+                    createAccount();
+                    Response.Redirect("Login.aspx", false);
                 }
-                lbl_state.Text = "Status : " + status;
-                if (scores < 4)
+                else
                 {
-                    lbl_state.ForeColor = Color.Red;
-                    return;
+                    lbl_error.Visible = true;
+                    lbl_error.ForeColor = Color.Red;
                 }
-                lbl_state.ForeColor = Color.Green;
-
-
-
-                string pwd = tb_pwd.Text.ToString().Trim(); ;
-                //Generate random "salt"
-                RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-                byte[] saltByte = new byte[8];
-                //Fills array of bytes with a cryptographically strong sequence of random values.
-                rng.GetBytes(saltByte);
-                salt = Convert.ToBase64String(saltByte);
-                SHA512Managed hashing = new SHA512Managed();
-                string pwdWithSalt = pwd + salt;
-                byte[] plainHash = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwd));
-                byte[] hashWithSalt = hashing.ComputeHash(Encoding.UTF8.GetBytes(pwdWithSalt));
-                finalHash = Convert.ToBase64String(hashWithSalt);
-                RijndaelManaged cipher = new RijndaelManaged();
-                cipher.GenerateKey();
-                Key = cipher.Key;
-                IV = cipher.IV;
-                minpass = DateTime.Now.AddMinutes(5);
-                maxpass = DateTime.Now.AddMinutes(15);
-                createAccount();
-                Response.Redirect("Login.aspx", false);
-            }
-            else
-            {
-                lbl_error.Visible = true;
-                lbl_error.ForeColor = Color.Red;
             }
         }
 

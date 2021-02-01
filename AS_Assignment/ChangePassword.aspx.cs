@@ -30,8 +30,11 @@ namespace AS_Assignment
 
 
         }
-
-        protected void Submit(object sender, EventArgs e)
+        protected void Back(object sender, EventArgs e)
+        {
+            Response.Redirect("Homepage.aspx", false);
+        }
+            protected void Submit(object sender, EventArgs e)
         {
             string username = Session["LoggedIn"].ToString();
             string pwd = tb_oldpass.Text.ToString().Trim();
@@ -125,6 +128,7 @@ namespace AS_Assignment
                 throw new Exception(ex.ToString());
             }
         }
+
 
 
             protected string getDBHash(string username)
