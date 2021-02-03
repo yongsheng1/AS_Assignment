@@ -203,6 +203,7 @@
                         <asp:Label ID="Label2" runat="server" Text="Email (UserId)" CssClass="form__input"></asp:Label>
                   
                         <asp:TextBox ID="tb_userid" runat="server"  CssClass="form__input"></asp:TextBox>
+                    <asp:Label ID="lbl_email" runat="server" Text=""></asp:Label>
                 </div>
                 
                
