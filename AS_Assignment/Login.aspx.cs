@@ -64,7 +64,8 @@ namespace AS_Assignment
                                             string reset = "a";
                                             int time = UpdateTime(username, reset);
                                             System.Diagnostics.Debug.WriteLine("login");
-
+                                            int att = 0;
+                                            UpdateAttempt(username, att);
                                             Session["LoggedIn"] = tb_userid.Text.Trim();
                                             string guid = Guid.NewGuid().ToString();
                                             Session["AuthToken"] = guid;
@@ -73,8 +74,8 @@ namespace AS_Assignment
                                         }
                                         else
                                         {
-
-
+                                            int att = 0;
+                                            UpdateAttempt(username, att);
                                             Session["LoggedIn"] = tb_userid.Text.Trim();
                                             string guid = Guid.NewGuid().ToString();
                                             Session["AuthToken"] = guid;
@@ -131,6 +132,8 @@ namespace AS_Assignment
                                     {
                                         if (DateTime.Compare(DateTime.Now, maxtime) < 0)
                                         {
+                                            int att = 0;
+                                            UpdateAttempt(username, att);
                                             string reset = "";
                                             int time = UpdateTime(username, reset);
                                             System.Diagnostics.Debug.WriteLine("login");
@@ -143,6 +146,10 @@ namespace AS_Assignment
                                         }
                                         else
                                         {
+                                            int att = 0;
+                                            UpdateAttempt(username, att);
+                                            string reset = "";
+                                            int time = UpdateTime(username, reset);
                                             Session["LoggedIn"] = tb_userid.Text.Trim();
                                             string guid = Guid.NewGuid().ToString();
                                             Session["AuthToken"] = guid;

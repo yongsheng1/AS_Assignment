@@ -242,13 +242,13 @@ namespace AS_Assignment
                         using (SqlDataAdapter sda = new SqlDataAdapter())
                         {
                             cmd.CommandType = CommandType.Text;
-                            cmd.Parameters.AddWithValue("@paraEmail", tb_userid.Text.Trim());
-                            cmd.Parameters.AddWithValue("@paraFName", tb_fname.Text.Trim());
-                            cmd.Parameters.AddWithValue("@paraLName", tb_lname.Text);
+                            cmd.Parameters.AddWithValue("@paraEmail", HttpUtility.HtmlEncode(tb_userid.Text.Trim()));
+                            cmd.Parameters.AddWithValue("@paraFName", HttpUtility.HtmlEncode(tb_fname.Text.Trim()));
+                            cmd.Parameters.AddWithValue("@paraLName", HttpUtility.HtmlEncode(tb_lname.Text));
                             cmd.Parameters.AddWithValue("@paraPasswordHash", finalHash);
                             cmd.Parameters.AddWithValue("@paraPasswordSalt", salt);
                             cmd.Parameters.AddWithValue("@paraCard", encryptData(tb_card.Text));
-                            cmd.Parameters.AddWithValue("@paraDob", tb_dob.Text);
+                            cmd.Parameters.AddWithValue("@paraDob", HttpUtility.HtmlEncode(tb_dob.Text));
                             cmd.Parameters.AddWithValue("@paraAttempts", attempt);
                             cmd.Parameters.AddWithValue("@paraLocktime", time);
                             cmd.Parameters.AddWithValue("@paraMinpass", minpass );
